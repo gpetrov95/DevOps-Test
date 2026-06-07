@@ -1,0 +1,16 @@
+name: Simple Deploy
+on: [push] # Пускай се при всеки push (промяна)
+
+jobs:
+  deploy:
+    runs-on: self-hosted # Твоята машина
+    steps:
+      - uses: actions/checkout@v4 # Свали кода на локалния Linux
+
+      - name: Stop old container
+        run: docker stop my-web || true && docker rm my-web || true
+
+      - name: Build and Run
+        run: |
+          docker build -t my-page .
+          docker run -d --name my-web -p 8080:80 my-page
